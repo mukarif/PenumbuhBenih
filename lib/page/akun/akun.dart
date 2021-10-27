@@ -4,6 +4,7 @@ import 'package:petani/extra/bottom_nav.dart';
 import 'package:petani/page/akun/pengaturan_akun.dart';
 import 'package:petani/page/akun/ubah_pass.dart';
 import 'package:petani/extra/logout_alert.dart';
+import 'package:petani/presenter/user_presenter.dart';
 
 class AkunPage extends StatefulWidget {
   const AkunPage({Key key}) : super(key: key);
@@ -12,16 +13,36 @@ class AkunPage extends StatefulWidget {
   _AkunPageState createState() => _AkunPageState();
 }
 
-class _AkunPageState extends State<AkunPage> {
+class _AkunPageState extends State<AkunPage> implements GetUserContract {
   GlobalKey<FormState> formAkun = GlobalKey<FormState>();
 
   TextEditingController nama = TextEditingController();
   TextEditingController alamat = TextEditingController();
   TextEditingController poktan = TextEditingController();
 
+  GetUserPresenter _presenter;
+  _AkunPageState() {
+    _presenter = GetUserPresenter(this);
+  }
   @override
   void initState() {
     super.initState();
+    _presenter.doGetUser();
+  }
+
+  @override
+  void onPostLoginError(String errorTxt) {
+    print("Error :: " + errorTxt);
+  }
+
+  @override
+  void onPostLoginSuccess(dynamic user) {
+    print("User Sukses :: " + user.toString());
+    // if (token['profile']['role']['id'] == 1) {
+    //   Get.to(() => const TabBarPagePetani());
+    // } else {
+    //   Get.to(() => const TabBarPage());
+    // }
   }
 
   @override
@@ -53,13 +74,13 @@ class _AkunPageState extends State<AkunPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    _tff("Nama", "Nama", nama),
+                    _tff("Sumber Makmur", "Sumber Makmur", nama),
                     _box(10),
-                    _tff("Alamat", "Alamat", alamat),
+                    _tff("Serpong, Tangerang", "Serpong, Tangerang", alamat),
                     _box(10),
-                    _tff("Kelompok Tani", "Kelompok Tani", poktan),
+                    _tff("Gapoktan", "Gapoktan", poktan),
                     _box(10),
-                    _password("Ubah Password"),
+                    _password("Pengaturan Password"),
                   ],
                 ),
               ),
@@ -77,7 +98,7 @@ class _AkunPageState extends State<AkunPage> {
         width: 150,
         child: TextButton(
           child: const Text(
-            "logOut",
+            "logout",
             style: TextStyle(color: Colors.white),
           ),
           onPressed: () {
@@ -123,7 +144,7 @@ class _AkunPageState extends State<AkunPage> {
                   height: 5,
                 ),
                 Text(
-                  "Petani",
+                  "Kelompok Tani",
                   style: TextStyle(color: Colors.white54, fontSize: 14),
                 ),
               ],

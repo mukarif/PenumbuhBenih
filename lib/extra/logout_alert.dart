@@ -2,6 +2,8 @@ import 'package:petani/page/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class Alerts {
   static showAlertDialog(BuildContext context) {
     // show the dialog
@@ -21,8 +23,16 @@ class Alerts {
               ),
               // ignore: deprecated_member_use
               FlatButton(
-                onPressed: () {
+                onPressed: () async {
                   // SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                  SharedPreferences pref =
+                      await SharedPreferences.getInstance();
+                  final data = pref.getString('access_token');
+                  // ignore: avoid_print
+                  print("data token  :: " + data);
+                  await pref.clear();
+                  // ignore: avoid_print
+                  print("revoke token  :: " + data);
                   Get.to(() => const LoginPage());
                 },
                 child: const Text('Yes'),

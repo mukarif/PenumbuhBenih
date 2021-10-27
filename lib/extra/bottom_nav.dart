@@ -15,6 +15,7 @@ class TabBarPage extends StatefulWidget {
 
 class _TabBarPageState extends State<TabBarPage> {
   int _currentIndex = 0;
+  DateTime currentBackPressTime;
   List<Widget> tabs = <Widget>[
     const HomePage(),
     const DaftarLahan(),
@@ -25,11 +26,29 @@ class _TabBarPageState extends State<TabBarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: tabs.elementAt(_currentIndex),
-      bottomNavigationBar: _buildBottomBar(),
+    return WillPopScope(
+      // ignore: missing_return
+      onWillPop: () => handleWillPop(context),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: tabs.elementAt(_currentIndex),
+        bottomNavigationBar: _buildBottomBar(),
+      ),
     );
+  }
+
+  Future<bool> handleWillPop(BuildContext context) async {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime) > const Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        duration: Duration(seconds: 1),
+        content: Text("double click for close app"),
+      ));
+      return Future.value(false);
+    }
+    return Future.value(true);
   }
 
   Widget _buildBottomBar() {

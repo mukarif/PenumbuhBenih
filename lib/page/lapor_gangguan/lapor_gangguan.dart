@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:petani/extra/bottom_nav.dart';
 
 class LaporanGanggguan extends StatefulWidget {
   const LaporanGanggguan({Key key}) : super(key: key);
@@ -64,7 +65,7 @@ class _LaporanGanggguanState extends State<LaporanGanggguan> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Get.back();
+            Get.off(() => const TabBarPage());
           },
           icon: const Icon(
             Icons.arrow_back,

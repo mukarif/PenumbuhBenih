@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:petani/page_petani/login/first_page.dart';
+import 'package:petani/login/first_page.dart';
 
 void main() {
   runApp(const MyApp());

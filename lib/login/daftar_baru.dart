@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:petani/page_petani/login/login.dart';
+import 'package:petani/login/login.dart';
 
 class DaftarBaru extends StatefulWidget {
   const DaftarBaru({Key key}) : super(key: key);

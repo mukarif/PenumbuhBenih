@@ -15,7 +15,7 @@ class Token {
 
   Future<String> readToken() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    final data = pref.getString('access_token');
+    final data = await pref.getString('access_token');
     return data;
   }
 

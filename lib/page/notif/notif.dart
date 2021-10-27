@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:petani/extra/bottom_nav.dart';
 
 class NotifikasiPetani extends StatefulWidget {
   const NotifikasiPetani({Key key}) : super(key: key);
@@ -20,7 +21,7 @@ class _NotifikasiPetaniState extends State<NotifikasiPetani> {
           elevation: 0,
           leading: IconButton(
             onPressed: () {
-              Get.back();
+              Get.off(() => const TabBarPage());
             },
             icon: const Icon(
               Icons.arrow_back,
