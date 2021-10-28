@@ -7,12 +7,14 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:petani/extra/bottom_nav.dart';
 import 'package:petani/extra/bottom_nav_petani.dart';
-import 'package:petani/helper/Token.dart';
+import 'package:petani/helper/token.dart';
 import 'package:petani/page_petani/home/home.dart';
 import 'package:petani/page_petani/lahan/lahan.dart';
-import 'package:petani/page_petani/login/daftar_baru.dart';
-import 'package:petani/page_petani/login/lupa_pass.dart';
-import 'package:http/http.dart' as http;
+import 'package:petani/login/daftar_baru.dart';
+import 'package:petani/login/lupa_pass.dart';
+import 'package:petani/util/api.dart';
+import 'package:petani/presenter/login_presenter.dart';
+import 'package:petani/helper/token.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -21,7 +23,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> implements PostLoginContract {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool _obsecureText = true;
@@ -31,6 +33,27 @@ class _LoginPageState extends State<LoginPage> {
 
   bool loading = true;
 
+  final Token _token = Token();
+  PostLoginPresenter _presenter;
+  _LoginPageState() {
+    _presenter = PostLoginPresenter(this);
+  }
+
+  @override
+  void onPostLoginError(String errorTxt) {
+    print("Error :: " + errorTxt);
+  }
+
+  @override
+  void onPostLoginSuccess(dynamic token) {
+    print("Sukses :: " + token['profile']['role']['id'].toString());
+    _token.saveToken(token['api_key']);
+    if (token['profile']['role']['id'] == 1) {
+      Get.to(() => const TabBarPagePetani());
+    } else {
+      Get.to(() => const TabBarPage());
+    }
+  }
   // void cekLogin() async {
   //   try {
   //     // get token from local storage
@@ -224,10 +247,10 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   onPressed: () {
                                     setState(() {
-                                      loading
-                                          ? CircularProgressIndicator()
-                                          : _testLogin();
-                                      // _testLogin();
+                                      // loading
+                                      // ? CircularProgressIndicator()
+                                      // : _testLogin();
+                                      _testLogin();
                                     });
                                   },
                                 ),
@@ -276,17 +299,12 @@ class _LoginPageState extends State<LoginPage> {
       print("status saat ini: $loading");
       print("Validate sukses");
 
-      if (userTC.text == "petani") {
-        Get.to(() => const TabBarPagePetani());
-      } else {
-        Get.to(() => const TabBarPage());
-      }
-
+      _presenter.doPostLogin(userTC.text, passTC.text);
       // var url = "http://34.101.65.93/v1/auth-token/";
       // var _body = {'username': userTC.text, 'password': passTC.text};
-      // // print("body sebelum eksekusi :  " + json.encode(_body));
+      // print("body sebelum eksekusi :  " + json.encode(_body));
 
-      // // print("url :  " + json.encode(url));
+      // print("url :  " + json.encode(url));
       // try {
       //   var response = await http.post(
       //     Uri.parse(url),

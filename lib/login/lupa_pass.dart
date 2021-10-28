@@ -1,8 +1,7 @@
-// import 'dart:async';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:petani/extra/box.dart';
-import 'package:petani/page/login/login.dart';
+import 'package:petani/login/login.dart';
 
 class LupaPass extends StatefulWidget {
   const LupaPass({Key key}) : super(key: key);
@@ -14,19 +13,31 @@ class LupaPass extends StatefulWidget {
 class _LupaPassState extends State<LupaPass> {
   TextEditingController email = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
+  DateTime currentBackPressTime;
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<bool> handleWillPop(BuildContext context) async {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime) > const Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        duration: Duration(seconds: 1),
+        content: Text("double click for close app"),
+      ));
+      return Future.value(false);
+    }
+    return Future.value(true);
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       // ignore: missing_return
-      onWillPop: () {
-        Get.to(() => const LoginPage());
-      },
+      onWillPop: () => handleWillPop(context),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         body: Container(
@@ -39,14 +50,14 @@ class _LupaPassState extends State<LupaPass> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const CustomBox(h: 100),
+              _box(100),
               Image.asset(
                 "assets/images/col_putih.png",
                 width: Get.width * 0.35,
                 height: Get.height * 0.2,
                 // fit: BoxFit.fill,
               ),
-              const CustomBox(h: 10),
+              _box(10),
               const Text(
                 "Lupa Password",
                 style: TextStyle(
@@ -54,7 +65,7 @@ class _LupaPassState extends State<LupaPass> {
                     fontWeight: FontWeight.bold,
                     fontSize: 20),
               ),
-              const CustomBox(h: 5),
+              _box(5),
               const Text(
                 "Lengkapi Alamat Email Anda",
                 style: TextStyle(color: Colors.white54),
@@ -65,8 +76,6 @@ class _LupaPassState extends State<LupaPass> {
                 child: Form(
                   key: formKey,
                   child: TextFormField(
-                    autofillHints: const [AutofillHints.email],
-                    keyboardType: TextInputType.emailAddress,
                     controller: email,
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
@@ -110,7 +119,7 @@ class _LupaPassState extends State<LupaPass> {
                     ),
                   ),
                   onPressed: () {
-                    // Get.offAll(() => const LoginPage());
+                    Get.offAll(() => const LoginPage());
                   },
                 ),
               ),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:petani/page/alsintan/alsintan.dart';
@@ -198,7 +199,7 @@ class _TambahAlsintanBaruState extends State<TambahAlsintanBaru> {
                           ),
                         ],
                       ),
-                      _tff("Harga Sewa", "Harga Sewa", luasLahan),
+                      _tfn("Harga Sewa", "Harga Sewa", luasLahan),
                       _box(10),
                       _formField("Satuan", _petani, _dropdownValues),
                       const SizedBox(
@@ -223,6 +224,28 @@ class _TambahAlsintanBaruState extends State<TambahAlsintanBaru> {
     return TextFormField(
       controller: controller,
       style: const TextStyle(color: Colors.black),
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.only(left: 20),
+        labelStyle: const TextStyle(color: Colors.black54),
+        hintStyle: const TextStyle(color: Colors.black87),
+        hintText: hint,
+        labelText: label,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+      ),
+      onSaved: (value) {
+        controller.text = value;
+      },
+    );
+  }
+
+  Widget _tfn(String hint, String label, TextEditingController controller) {
+    return TextFormField(
+      controller: controller,
+      style: const TextStyle(color: Colors.black),
+      keyboardType: TextInputType.number,
+      inputFormatters: <TextInputFormatter>[
+        WhitelistingTextInputFormatter.digitsOnly
+      ],
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(left: 20),
         labelStyle: const TextStyle(color: Colors.black54),

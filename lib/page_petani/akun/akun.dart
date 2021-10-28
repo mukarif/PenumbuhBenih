@@ -1,10 +1,9 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petani/extra/bottom_nav.dart';
 import 'package:petani/page_petani/akun/pengaturan_akun.dart';
 import 'package:petani/page_petani/akun/ubah_pass.dart';
-import 'package:petani/page_petani/login/login.dart';
+import 'package:petani/login/login.dart';
 
 class AkunPage extends StatefulWidget {
   const AkunPage({Key key}) : super(key: key);

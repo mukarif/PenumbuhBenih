@@ -62,9 +62,9 @@ class _PengaturanAkunState extends State<PengaturanAkun> {
                       key: formAkun,
                       child: Column(
                         children: [
-                          _tff("Nama", "Nama", nama),
+                          _tff("Sumber Makmur", "Nama", nama),
                           _box(10),
-                          _formField("Pilih poktan", poktan, _dropdownValues),
+                          _formField("Pilih Gapoktan", poktan, _dropdownValues),
                           _box(10),
                         ],
                       ),

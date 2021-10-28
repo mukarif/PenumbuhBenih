@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:petani/page_petani/login/login.dart';
+import 'package:petani/login/login.dart';
 
 class BackGround extends StatefulWidget {
   const BackGround({Key key}) : super(key: key);

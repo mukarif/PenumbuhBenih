@@ -8,7 +8,7 @@ import 'package:petani/page_petani/info_cuaca/info_cuaca.dart';
 import 'package:petani/page_petani/info_harga/info_harga.dart';
 import 'package:petani/page_petani/lahan/lahan.dart';
 import 'package:petani/page_petani/lapor_gangguan/lapor_gangguan.dart';
-import 'package:petani/page_petani/login/login.dart';
+import 'package:petani/login/login.dart';
 import 'package:petani/page_petani/pemeliharaan/pemeliharaan.dart';
 import 'package:petani/page_petani/perencanaan/rencana_budidaya.dart';
 
