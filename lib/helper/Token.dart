@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,9 +14,9 @@ class Token {
     pref.setString('access_token', token);
   }
 
-  Future<String> readToken() async {
+  Future<dynamic> readToken() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    final data = await pref.getString('access_token');
+    final String data = pref.getString('access_token');
     return data;
   }
 
@@ -28,8 +29,8 @@ class Token {
     SharedPreferences pref = await SharedPreferences.getInstance();
     final data = pref.getString('access_token');
     if (data != null) {
-      final accessToken = json.decode(data);
-      return accessToken['access_token'];
+      // final accessToken = json.decode(data);
+      return data;
     }
     return null;
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petani/extra/bottom_nav.dart';
+import 'package:petani/model/user.dart';
 import 'package:petani/page/akun/pengaturan_akun.dart';
 import 'package:petani/page/akun/ubah_pass.dart';
 import 'package:petani/extra/logout_alert.dart';
@@ -19,7 +20,9 @@ class _AkunPageState extends State<AkunPage> implements GetUserContract {
   TextEditingController nama = TextEditingController();
   TextEditingController alamat = TextEditingController();
   TextEditingController poktan = TextEditingController();
-
+  String _nama;
+  String _alamat;
+  String _gapoktan;
   GetUserPresenter _presenter;
   _AkunPageState() {
     _presenter = GetUserPresenter(this);
@@ -37,13 +40,18 @@ class _AkunPageState extends State<AkunPage> implements GetUserContract {
 
   @override
   void onPostLoginSuccess(dynamic user) {
-    print("User Sukses :: " + user.toString());
-    // if (token['profile']['role']['id'] == 1) {
-    //   Get.to(() => const TabBarPagePetani());
-    // } else {
-    //   Get.to(() => const TabBarPage());
-    // }
+    print("username Sukses :: " + user['username'].toString());
+
+    _nama = user['detail']['role']['poktan']['nama'];
+    _alamat = user['detail']['role']['poktan']['alamat'];
+    _gapoktan = user['detail']['role']['poktan']['gapoktan'];
+    print('Nama : $_nama');
   }
+
+  final Future<String> _calculation = Future<String>.delayed(
+    const Duration(seconds: 2),
+    () => 'Data Loaded',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -63,30 +71,71 @@ class _AkunPageState extends State<AkunPage> implements GetUserContract {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            headerAkun(),
-            bodyIcon(),
-            bodyProfile(),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(25, 20, 25, 20),
-              child: Form(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+        child: FutureBuilder<String>(
+          future: _calculation, // a previously-obtained Future<String> or null
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            List<Widget> children;
+            if (snapshot.hasData) {
+              children = <Widget>[
+                Column(
                   children: [
-                    _tff("Sumber Makmur", "Sumber Makmur", nama),
-                    _box(10),
-                    _tff("Serpong, Tangerang", "Serpong, Tangerang", alamat),
-                    _box(10),
-                    _tff("Gapoktan", "Gapoktan", poktan),
-                    _box(10),
-                    _password("Pengaturan Password"),
+                    headerAkun(),
+                    bodyIcon(),
+                    bodyProfile(_nama, _gapoktan),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(25, 20, 25, 20),
+                      child: Form(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            _tff(_nama, _nama, nama),
+                            _box(10),
+                            _tff(_alamat, _alamat, alamat),
+                            _box(10),
+                            _tff(_gapoktan, _gapoktan, poktan),
+                            _box(10),
+                            _password("Pengaturan Password"),
+                          ],
+                        ),
+                      ),
+                    ),
+                    logOut()
                   ],
                 ),
+              ];
+            } else if (snapshot.hasError) {
+              children = <Widget>[
+                const Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 60,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Text('Error: ${snapshot.error}'),
+                )
+              ];
+            } else {
+              children = const <Widget>[
+                SizedBox(
+                  child: CircularProgressIndicator(),
+                  width: 60,
+                  height: 60,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 16),
+                  child: Text('Awaiting result...'),
+                )
+              ];
+            }
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: children,
               ),
-            ),
-            logOut()
-          ],
+            );
+          },
         ),
       ),
     );
@@ -119,7 +168,7 @@ class _AkunPageState extends State<AkunPage> implements GetUserContract {
     );
   }
 
-  Container bodyProfile() {
+  Container bodyProfile(String nama, String gapoktan) {
     return Container(
       color: Colors.green,
       height: 90,
@@ -132,20 +181,20 @@ class _AkunPageState extends State<AkunPage> implements GetUserContract {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
+              children: [
                 Text(
-                  "Raffi Fahru",
-                  style: TextStyle(
+                  nama,
+                  style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 18),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 Text(
-                  "Kelompok Tani",
-                  style: TextStyle(color: Colors.white54, fontSize: 14),
+                  gapoktan,
+                  style: const TextStyle(color: Colors.white54, fontSize: 14),
                 ),
               ],
             ),

@@ -4,13 +4,21 @@ import 'dart:convert';
 // import 'package:my_project_name/model/AllLeague.dart';
 // import 'package:my_project_name/model/Schedule.dart';
 import 'package:petani/helper/constant.dart';
-import 'package:petani/helper/Token.dart';
 import 'package:petani/util/network_util.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RestDatasource {
   final JsonDecoder decoder = const JsonDecoder();
   final NetworkUtil _netUtil = NetworkUtil();
-  final Token _token = Token();
+
+  Future<dynamic> getToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String patientPhone = /*added */ prefs.getString('access_token');
+    // ignore: avoid_print
+    print('tester token ::' + patientPhone);
+
+    return patientPhone;
+  }
 
   Future<dynamic> login(String useranme, String password) {
     return _netUtil
@@ -27,14 +35,18 @@ class RestDatasource {
     });
   }
 
-  Future<dynamic> getUser() {
-    final token = _token.readToken();
-    print("token user :: " + token.toString());
-    return _netUtil.get(Uri.parse(GET_USER), headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    }).then((dynamic res) {
+  Future<dynamic> getUser() async {
+    String token = await getToken();
+    // ignore: avoid_print
+    print("token user :: " + token);
+    return _netUtil.get(
+      Uri.parse(GET_USER),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).then((dynamic res) {
       // ignore: avoid_print
       print("User List : " + res.toString());
       return res;

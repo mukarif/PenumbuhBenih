@@ -15,7 +15,7 @@ class GetUserPresenter {
     print("masuk");
     api.getUser().then((dynamic user) {
       // ignore: avoid_print
-      print("data User :: " + user.toString());
+      print("ID User :: " + user['id'].toString());
       _view.onPostLoginSuccess(user);
     }).catchError((error) => _view.onPostLoginError(error.toString()));
   }

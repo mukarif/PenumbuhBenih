@@ -11,7 +11,8 @@ class NetworkUtil {
   final JsonDecoder _decoder = const JsonDecoder();
 
   Future<dynamic> get(Uri url, {Map<String, String> headers}) {
-    return http.get(url).then((http.Response response) {
+    return http.get(url, headers: headers).then((http.Response response) {
+      // ignore: avoid_print
       print("status_code1:" + response.toString());
       final String res = response.body;
       final int statusCode = response.statusCode;

@@ -7,14 +7,14 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:petani/extra/bottom_nav.dart';
 import 'package:petani/extra/bottom_nav_petani.dart';
-import 'package:petani/helper/Token.dart';
+import 'package:petani/helper/token.dart';
 import 'package:petani/page_petani/home/home.dart';
 import 'package:petani/page_petani/lahan/lahan.dart';
 import 'package:petani/login/daftar_baru.dart';
 import 'package:petani/login/lupa_pass.dart';
 import 'package:petani/util/api.dart';
 import 'package:petani/presenter/login_presenter.dart';
-import 'package:petani/helper/Token.dart';
+import 'package:petani/helper/token.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
