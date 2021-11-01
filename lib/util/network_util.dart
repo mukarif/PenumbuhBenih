@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -12,11 +14,9 @@ class NetworkUtil {
 
   Future<dynamic> get(Uri url, {Map<String, String> headers}) {
     return http.get(url, headers: headers).then((http.Response response) {
-      // ignore: avoid_print
-      print("status_code1:" + response.toString());
+      // print("status_code1:" + response.toString());
       final String res = response.body;
       final int statusCode = response.statusCode;
-      final data = _decoder.convert(res);
       print("status_res:" + response.body.toString());
       print("statusCode:" + statusCode.toString());
       if (statusCode == 200) {
@@ -73,6 +73,7 @@ class NetworkUtil {
       print("status_code3:" + response.statusCode.toString());
       final String res = response.body;
       final int statusCode = response.statusCode;
+      print("response put :" + res.toString());
 
       /*if (statusCode < 200 || statusCode > 400 || json == null) {
         throw new Exception("Error while fetching data");

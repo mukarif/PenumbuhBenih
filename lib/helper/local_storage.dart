@@ -1,12 +1,16 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Token {
+class LocalStorage {
   Future<void> saveUserData(String data) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setString('user_data', data);
+  }
+
+  Future<String> readUser() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    final String data = pref.getString('user_data');
+    print("Nama User :: $data");
+    return data;
   }
 
   Future<void> saveToken(String token) async {

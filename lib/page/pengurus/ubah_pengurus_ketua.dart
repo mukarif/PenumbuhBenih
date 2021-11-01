@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:petani/page/ringkasan/ringkasan.dart';
 
 class UbahPengurus extends StatefulWidget {
@@ -24,6 +26,55 @@ class _UbahPengurusState extends State<UbahPengurus> {
 
   File _selectedImage;
   final picker = ImagePicker();
+
+  double _height;
+  double _width;
+  String _setTime, _setDate;
+
+  String _hour, _minute, _time;
+
+  String dateTime;
+
+  DateTime selectedDate = DateTime.now();
+
+  TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
+
+  TextEditingController _awalDateController = TextEditingController();
+  TextEditingController _akhirDontroller = TextEditingController();
+  TextEditingController _timeController = TextEditingController();
+
+  Future<Null> _selectDate(
+      BuildContext context, TextEditingController _controller) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        initialDatePickerMode: DatePickerMode.day,
+        firstDate: DateTime(2015),
+        lastDate: DateTime(2101));
+    if (picked != null) {
+      setState(() {
+        selectedDate = picked;
+        _controller.text = DateFormat.yMd().format(selectedDate);
+      });
+    }
+  }
+
+  Future<Null> _selectTime(BuildContext context) async {
+    final TimeOfDay picked = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+    );
+    if (picked != null) {
+      setState(() {
+        selectedTime = picked;
+        _hour = selectedTime.hour.toString();
+        _minute = selectedTime.minute.toString();
+        _time = _hour + ' : ' + _minute;
+        _timeController.text = _time;
+        _timeController.text = DateFormat.yMd().format(selectedDate);
+      });
+    }
+  }
 
   Widget getImageWidget() {
     if (_selectedImage != null) {
@@ -57,7 +108,18 @@ class _UbahPengurusState extends State<UbahPengurus> {
   }
 
   @override
+  void initState() {
+    // _dateController.text = DateFormat.yMd().format(DateTime.now());
+
+    // _timeController.text = DateFormat.yMd().format(selectedDate).toString();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    _height = MediaQuery.of(context).size.height;
+    _width = MediaQuery.of(context).size.width;
+    dateTime = DateFormat.yMd().format(DateTime.now());
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -99,9 +161,9 @@ class _UbahPengurusState extends State<UbahPengurus> {
                       key: formLaporanGanggguan,
                       child: Column(
                         children: [
-                          Align(
+                          const Align(
                             alignment: Alignment.centerLeft,
-                            child: const Text(
+                            child: Text(
                               "Ketua : ",
                               style: TextStyle(
                                 color: Colors.black,
@@ -111,65 +173,31 @@ class _UbahPengurusState extends State<UbahPengurus> {
                           _box(5),
                           _formField("Raffi Fahru", kategori, _dropdownValues),
                           _box(10),
-                          Align(
+                          const Align(
                             alignment: Alignment.centerLeft,
-                            child: const Text(
-                              "Wakil Ketua : ",
+                            child: Text(
+                              "Tanggal Awal : ",
                               style: TextStyle(
                                 color: Colors.black,
                               ),
                             ),
                           ),
                           _box(5),
-                          _formField("Faris", tanaman, _dropdownValues),
+                          _formFieldDate("Tanggal Awal", "mm/dd/yyyy",
+                              _awalDateController),
                           _box(10),
-                          Align(
+                          const Align(
                             alignment: Alignment.centerLeft,
-                            child: const Text(
-                              "Sekertaris 1 : ",
+                            child: Text(
+                              "Tanggal Akhir : ",
                               style: TextStyle(
                                 color: Colors.black,
                               ),
                             ),
                           ),
                           _box(5),
-                          _formField("Haryanto", tanaman, _dropdownValues),
-                          _box(10),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: const Text(
-                              "Sekertaris 2 : ",
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          _box(5),
-                          _formField("Susetyo", tanaman, _dropdownValues),
-                          _box(10),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: const Text(
-                              "Bendahara 1 : ",
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          _box(5),
-                          _formField("Sutono", tanaman, _dropdownValues),
-                          _box(10),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: const Text(
-                              "Bendahara 2 : ",
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          _box(5),
-                          _formField("Pilih Anggota", tanaman, _dropdownValues),
+                          _formFieldDate(
+                              "Tanggal Akhir", "mm/dd/yyyy", _akhirDontroller),
                           _box(10),
                           const ButtonSimpan(),
                           _box(10),
@@ -230,6 +258,56 @@ class _UbahPengurusState extends State<UbahPengurus> {
           // isExpanded: false,
           value: onChange,
         ),
+      ),
+    );
+  }
+
+  Widget _formFieldDate(
+      String hint, String onChange, TextEditingController controller) {
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          border: Border.all(color: Colors.grey),
+        ),
+        child: InkWell(
+            onTap: () {
+              _selectDate(context, controller);
+            },
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 9,
+                  child: TextFormField(
+                    style: const TextStyle(color: Colors.black),
+                    enabled: false,
+                    keyboardType: TextInputType.text,
+                    controller: controller,
+                    onSaved: (String val) {
+                      _setDate = val;
+                    },
+                    decoration: InputDecoration(
+                      // contentPadding: const EdgeInsets.only(left: 0),
+                      labelStyle: const TextStyle(color: Colors.black54),
+                      hintStyle: const TextStyle(color: Colors.black87),
+                      hintText: hint,
+                      // labelText: label,
+                      // border:
+                      //     OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+                    ),
+                  ),
+                ),
+                const Expanded(
+                  flex: 1,
+                  child: Icon(
+                    Icons.calendar_today,
+                    color: Colors.green,
+                    size: 15,
+                  ),
+                ),
+              ],
+            )),
       ),
     );
   }

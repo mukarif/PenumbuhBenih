@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // import 'package:google_maps_controller/google_maps_controller.dart';
 import 'package:petani/page/lahan/daftar_lahan.dart';
-import 'package:petani/page/lahan/detail.budidaya.dart';
+import 'package:petani/page/lahan/detail_budidaya.dart';
 
 class DetailLahan extends StatefulWidget {
   const DetailLahan({Key key}) : super(key: key);

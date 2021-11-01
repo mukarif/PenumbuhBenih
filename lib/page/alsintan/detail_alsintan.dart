@@ -1,15 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:petani/presenter/detail_alsintan_presenter.dart';
 
 class DetailAlsintan extends StatefulWidget {
-  const DetailAlsintan({Key key}) : super(key: key);
+  // const DetailAlsintan({Key key}) : super(key: key);
+  final int id;
+  DetailAlsintan(this.id);
 
   @override
-  _DetailAlsintanState createState() => _DetailAlsintanState();
+  _DetailAlsintanState createState() => _DetailAlsintanState(id);
 }
 
-class _DetailAlsintanState extends State<DetailAlsintan> {
+class _DetailAlsintanState extends State<DetailAlsintan>
+    implements GetDetailAlsintanContract {
+  /// Declare class
+  final int _id;
+  //_outletDetailState(this.outlet);
+
   GlobalKey<FormState> formLahan = GlobalKey<FormState>();
   GlobalKey<FormState> formJual = GlobalKey<FormState>();
   TextEditingController hrgaJual = TextEditingController();
@@ -19,14 +27,36 @@ class _DetailAlsintanState extends State<DetailAlsintan> {
   TextEditingController jmlhTngaKrja = TextEditingController();
   TextEditingController biayaTngaKrja = TextEditingController();
 
-  List<String> _dropdownValues = ["One", "Two", "Three", "Four", "Five"];
+  final List<String> _dropdownValues = ["One", "Two", "Three", "Four", "Five"];
   String satuanHasilPanen;
   String satuanJmlhTngaKrja;
 
   bool checked = false;
 
+  dynamic _data;
+  GetDetailAlsintanPresenter _presenter;
+  _DetailAlsintanState(this._id) {
+    _presenter = GetDetailAlsintanPresenter(this);
+  }
+
+  @override
+  void onPostLoginError(String errorTxt) {
+    print("Error :: " + errorTxt);
+  }
+
+  @override
+  void onPostLoginSuccess(dynamic user) {
+    print("username Sukses :: " + user[0].toString());
+    _data = user;
+  }
+
+  final Future<String> _calculation = Future<String>.delayed(
+    const Duration(seconds: 2),
+    () => 'Data Loaded',
+  );
   @override
   Widget build(BuildContext context) {
+    _presenter.doGetDetailAlsintan(_id);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -47,60 +77,98 @@ class _DetailAlsintanState extends State<DetailAlsintan> {
         height: Get.height,
         width: Get.width,
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Text(
-                  "Detail Panen",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                Container(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Image.asset(
-                      "assets/images/petani.jpg",
-                      fit: BoxFit.cover,
+          child: FutureBuilder<String>(
+              future:
+                  _calculation, // a previously-obtained Future<String> or null
+              // ignore: missing_return
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Detail Panen",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                        ),
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        Container(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.network(
+                              _data['foto'] ?? "assets/images/petani.jpg",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                blurRadius: 10,
+                                offset: const Offset(-20, 0),
+                              ),
+                            ],
+                          ),
+                          height: 210,
+                          width: Get.width,
+                        ),
+                        const SizedBox(
+                          height: 35,
+                        ),
+                        _listDetail("Nama Alsintan", _data['nama'] ?? ""),
+                        _box(),
+                        _listDetail("Merk", _data['merk'] ?? ""),
+                        _box(),
+                        _listDetail("Kategori", _data['kategori'] ?? ""),
+                        _box(),
+                        _listDetail("Harga Sewa", _data['harga_sewa'] ?? ""),
+                        _box(),
+                        _listDetail("Satuan", _data['satuan'] ?? ""),
+                        _box(),
+                        _listDetail("Keterangan", _data['Keterangan'] ?? ""),
+                      ],
                     ),
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 10,
-                        offset: const Offset(-20, 0),
-                      ),
-                    ],
-                  ),
-                  height: 210,
-                  width: Get.width,
-                ),
-                const SizedBox(
-                  height: 35,
-                ),
-                _listDetail("Nama Alsintan", "Traktor"),
-                _box(),
-                _listDetail("Merk", "Quick"),
-                _box(),
-                _listDetail("Kategori", "Traktor"),
-                _box(),
-                _listDetail("Harga Sewa", "10.000"),
-                _box(),
-                _listDetail("Satuan", "per Jam"),
-                _box(),
-                _listDetail("Keterangan", "Traktor 4 roda"),
-              ],
-            ),
-          ),
+                  );
+                } else if (snapshot.hasError) {
+                  return const Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 60,
+                  );
+                } else {
+                  return Center(
+                    child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                          color:
+                              Theme.of(context).dividerColor.withOpacity(0.10),
+                        ),
+                        padding: EdgeInsets.only(top: 20.0),
+                        //height: 440.0,
+                        child: SizedBox(
+                          child: CircularProgressIndicator(),
+                          height: 35.0,
+                          width: 35.0,
+                        )),
+                  );
+                }
+                // return Center(
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     crossAxisAlignment: CrossAxisAlignment.center,
+                //     children: children,
+                //   ),
+                // );
+              }),
         ),
       ),
     );

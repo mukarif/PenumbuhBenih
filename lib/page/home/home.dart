@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:petani/helper/local_storage.dart';
 import 'package:petani/page/lahan/daftar_lahan.dart';
 import 'package:petani/extra/logout_alert.dart';
 import 'package:petani/page/perencanaan/rencana_budidaya.dart';
@@ -11,6 +12,7 @@ import 'package:petani/page/anggota/manajemen_anggota.dart';
 import 'package:petani/page/pemeliharaan/pemeliharaan.dart';
 import 'package:petani/page/hasil_panen/hasil_panen.dart';
 import 'package:petani/page/alsintan/alsintan.dart';
+import 'package:petani/presenter/user_presenter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -19,13 +21,22 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> implements GetUserContract {
   String waktu = "";
+
+  String _namaUser;
+  GetUserPresenter _presenter;
+  final LocalStorage _token = LocalStorage();
+  _HomePageState() {
+    _presenter = GetUserPresenter(this);
+  }
 
   @override
   void initState() {
-    super.initState();
     now();
+    _presenter.doGetUser();
+    dataUser();
+    super.initState();
   }
 
   void now() {
@@ -35,10 +46,31 @@ class _HomePageState extends State<HomePage> {
     waktu = time;
   }
 
+  void dataUser() {
+    _token.readUser().then((String result) {
+      setState(() {
+        _namaUser = result;
+      });
+    });
+  }
+
+  @override
+  void onPostLoginError(String errorTxt) {
+    print("Error :: " + errorTxt);
+  }
+
+  @override
+  void onPostLoginSuccess(dynamic user) {
+    print("username Sukses :: " + user['username'].toString());
+    _token.saveUserData(user['detail']['role']['first_name'] +
+        " " +
+        user['detail']['role']['last_name']);
+    dataUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -52,44 +84,70 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Header(size: size, waktu: waktu),
-            const SizedBox(
-              height: 20,
-            ),
-            const Persediaan(),
-            const SizedBox(
-              height: 20,
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Text(
-                "Layanan Food Estate",
-                style: TextStyle(
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18),
-              ),
-            ),
-            const RowMenu1(),
-            const RowMenu2(),
-            const SizedBox(
-              height: 5,
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-              child: Text(
-                "Seputar Pertanian",
-                style: TextStyle(
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18),
-              ),
-            ),
-          ],
-        ),
+        child: FutureBuilder<String>(
+            future:
+                _calculation, // a previously-obtained Future<String> or null
+            builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Header(size: size, waktu: waktu, nama: _namaUser),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Persediaan(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                        "Layanan Food Estate",
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+                    ),
+                    const RowMenu1(),
+                    const RowMenu2(),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                      child: Text(
+                        "Seputar Pertanian",
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+                    ),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return const Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 60,
+                );
+              } else {
+                return const SizedBox(
+                  child: CircularProgressIndicator(),
+                  width: 60,
+                  height: 60,
+                );
+              }
+              // return Center(
+              //   child: Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     children: children,
+              //   ),
+              // );
+            }),
       ),
     );
   }
@@ -295,18 +353,26 @@ class RowMenu2 extends StatelessWidget {
   }
 }
 
+final Future<String> _calculation = Future<String>.delayed(
+  const Duration(seconds: 2),
+  () => 'Data Loaded',
+);
+
 class Header extends StatelessWidget {
   const Header({
     Key key,
     @required this.size,
     @required this.waktu,
+    @required this.nama,
   }) : super(key: key);
 
   final Size size;
   final String waktu;
+  final String nama;
 
   @override
   Widget build(BuildContext context) {
+    print("tekan ora :: $nama");
     return SizedBox(
       height: size.height * 0.16,
       child: Stack(
@@ -342,11 +408,11 @@ class Header extends StatelessWidget {
                     const SizedBox(
                       height: 8,
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
                       child: Text(
-                        " Raffi Fahru",
-                        style: TextStyle(
+                        nama ?? "nama kosong",
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 25,
                             fontWeight: FontWeight.bold),

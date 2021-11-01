@@ -12,7 +12,7 @@ class PostLoginPresenter {
 
   doPostLogin(String username, String password) {
     // ignore: avoid_print
-    print("masuk");
+    print("masuk un : $username pass : $password");
     api.login(username, password).then((dynamic token) {
       // ignore: avoid_print
       print("data search :: " + token.toString());

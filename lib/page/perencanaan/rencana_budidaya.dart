@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:petani/page/lahan/detail.budidaya.dart';
+import 'package:petani/page/lahan/detail_budidaya.dart';
 import 'package:petani/extra/bottom_nav.dart';
 
 class RencanaBudidaya extends StatefulWidget {

@@ -62,46 +62,50 @@ class _TabBarPageState extends State<TabBarPage> {
       ),
       // color: Colors.green,
       child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-          child: GNav(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            activeColor: Colors.white,
-            color: Colors.white,
-            rippleColor: Colors.white,
-            hoverColor: Colors.transparent,
-            gap: 8,
-            duration: const Duration(milliseconds: 10),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            tabBackgroundColor: Colors.transparent,
-            tabs: const [
-              GButton(
-                icon: Icons.home,
-                text: "Home",
+        child: Row(
+          children: [
+            Expanded(
+              child: GNav(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                activeColor: Colors.white,
+                color: Colors.white,
+                rippleColor: Colors.white,
+                hoverColor: Colors.transparent,
+                gap: 5,
+                duration: const Duration(milliseconds: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                tabBackgroundColor: Colors.transparent,
+                tabs: const [
+                  GButton(
+                    icon: Icons.home,
+                    text: "Home",
+                  ),
+                  GButton(
+                    icon: Icons.auto_awesome_motion_sharp,
+                    text: 'Lahan',
+                  ),
+                  GButton(
+                    icon: Icons.chat,
+                    text: 'Pesan',
+                  ),
+                  GButton(
+                    icon: Icons.notifications_none,
+                    text: "Notif",
+                  ),
+                  GButton(
+                    icon: Icons.person,
+                    text: 'Akun',
+                  ),
+                ],
+                onTabChange: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
               ),
-              GButton(
-                icon: Icons.auto_awesome_motion_sharp,
-                text: 'Lahan',
-              ),
-              GButton(
-                icon: Icons.chat,
-                text: 'Pesan',
-              ),
-              GButton(
-                icon: Icons.notifications_none,
-                text: "Notif",
-              ),
-              GButton(
-                icon: Icons.person,
-                text: 'Akun',
-              ),
-            ],
-            onTabChange: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-          ),
+            )
+          ],
         ),
       ),
     );

@@ -1,42 +1,39 @@
 import 'dart:async';
 import 'dart:convert';
 
-// import 'package:my_project_name/model/AllLeague.dart';
-// import 'package:my_project_name/model/Schedule.dart';
 import 'package:petani/helper/constant.dart';
 import 'package:petani/util/network_util.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:petani/helper/local_storage.dart';
 
 class RestDatasource {
   final JsonDecoder decoder = const JsonDecoder();
   final NetworkUtil _netUtil = NetworkUtil();
+  final LocalStorage _token = LocalStorage();
 
-  Future<dynamic> getToken() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String patientPhone = /*added */ prefs.getString('access_token');
-    // ignore: avoid_print
-    print('tester token ::' + patientPhone);
-
-    return patientPhone;
-  }
-
-  Future<dynamic> login(String useranme, String password) {
-    return _netUtil
-        .post(Uri.parse(LOGIN_URL),
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: jsonEncode(
-                <String, String>{"username": useranme, "password": password}))
-        .then((dynamic res) {
-      // ignore: avoid_print
-      print("Message List : " + res.toString());
-      return res;
-    });
+  Future<void> login(String useranme, String password) async {
+    try {
+      return _netUtil
+          .post(Uri.parse(LOGIN_URL),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+                'Accept': 'application/json',
+              },
+              body: jsonEncode(
+                  <String, String>{"username": useranme, "password": password}))
+          .then((dynamic res) {
+        _token.saveToken(res['api_key']);
+        // ignore: avoid_print
+        print("Token : " + res['api_key'].toString());
+        getUser();
+        return res;
+      });
+    } catch (e) {
+      throw Exception("dladok $e");
+    }
   }
 
   Future<dynamic> getUser() async {
-    String token = await getToken();
+    String token = await _token.getAccessToken();
     // ignore: avoid_print
     print("token user :: " + token);
     return _netUtil.get(
@@ -48,7 +45,112 @@ class RestDatasource {
       },
     ).then((dynamic res) {
       // ignore: avoid_print
+      print("Ambil Data Lokal : " + res.toString());
+      return res;
+    });
+  }
+
+  Future<List> getPermohonanAnggota() async {
+    String token = await _token.getAccessToken();
+    // ignore: avoid_print
+    print("token user :: " + token);
+    return _netUtil.get(
+      Uri.parse(GET_PERMOHONAN),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).then((dynamic res) {
+      // ignore: avoid_print
       print("User List : " + res.toString());
+      return res;
+    });
+  }
+
+  Future<List> getAnggota() async {
+    String token = await _token.getAccessToken();
+    // ignore: avoid_print
+    print("token user :: " + token);
+    return _netUtil.get(
+      Uri.parse(GET_ANGGOTA),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).then((dynamic res) {
+      // ignore: avoid_print
+      print("User List : " + res.toString());
+      return res;
+    });
+  }
+
+  Future<dynamic> getDetailAnggota(int id) async {
+    String token = await _token.getAccessToken();
+    // ignore: avoid_print
+    print("token user :: " + token);
+    return _netUtil.get(
+      Uri.parse(GET_ANGGOTA + id.toString()),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).then((dynamic res) {
+      print("data res : " + res.toString());
+      return res;
+    });
+  }
+
+  Future<dynamic> putPermohonanAnggota(int id) async {
+    String token = await _token.getAccessToken();
+    // ignore: avoid_print
+    print("token user :: " + token);
+    return _netUtil
+        .put(Uri.parse(PUT_PERMOHONAN_ANGGOTA),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Accept': 'application/json',
+              'Authorization': 'Bearer $token',
+            },
+            body: jsonEncode({"id": id}))
+        .then((dynamic res) {
+      print("data res : " + res.toString());
+      return res;
+    });
+  }
+
+  Future<List<dynamic>> getAlsintan() async {
+    String token = await _token.getAccessToken();
+    // ignore: avoid_print
+    print("token user :: " + token);
+    return _netUtil.get(
+      Uri.parse(GET_ALSINTAN),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).then((dynamic res) {
+      print("data res : " + res["results"].toString());
+      return res["results"];
+    });
+  }
+
+  Future<dynamic> getDetailAlsintan(int id) async {
+    String token = await _token.getAccessToken();
+    // ignore: avoid_print
+    print("token user :: " + token);
+    return _netUtil.get(
+      Uri.parse(GET_ALSINTAN + id.toString()),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).then((dynamic res) {
+      print("data res : " + res.toString());
       return res;
     });
   }

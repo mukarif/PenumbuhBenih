@@ -1,4 +1,4 @@
-import 'package:petani/page/login/login.dart';
+import 'package:petani/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,7 +30,8 @@ class Alerts {
                   final data = pref.getString('access_token');
                   // ignore: avoid_print
                   print("data token  :: " + data);
-                  await pref.clear();
+                  await pref.remove('access_token');
+                  await pref.remove('user_data');
                   // ignore: avoid_print
                   print("revoke token  :: " + data);
                   Get.to(() => const LoginPage());

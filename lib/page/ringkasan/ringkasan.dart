@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petani/extra/bottom_nav.dart';
-import 'package:petani/page/pengurus/ubah_pengurus.dart';
+import 'package:petani/page/pengurus/ubah_pengurus_ketua.dart';
 
 class RingkasanPage extends StatefulWidget {
   const RingkasanPage({Key key}) : super(key: key);
@@ -61,28 +61,14 @@ class _RingkasanState extends State<RingkasanPage> {
                     fontSize: 20),
               ),
               _box(40),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Kepengurusan",
-                      style: TextStyle(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Get.to(() => const UbahPengurus());
-                      },
-                      child: const Icon(
-                        Icons.mode_edit,
-                        color: Colors.green,
-                      ),
-                    ),
-                  ],
+              const Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: Text(
+                  "Kepengurusan",
+                  style: TextStyle(
+                      color: Colors.black54,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
                 ),
               ),
               _box(10),
@@ -110,11 +96,11 @@ class _RingkasanState extends State<RingkasanPage> {
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 2, left: 5),
+                      child: const Padding(
+                        padding: EdgeInsets.only(top: 2, left: 5),
                         child: ListTile(
                           onTap: null,
-                          title: const Text(
+                          title: Text(
                             "Anggota Petani",
                             style: TextStyle(
                               color: Colors.white,
@@ -145,86 +131,11 @@ class _RingkasanState extends State<RingkasanPage> {
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 2, left: 5),
+                      child: const Padding(
+                        padding: EdgeInsets.only(top: 2, left: 5),
                         child: ListTile(
                           onTap: null,
-                          title: const Text(
-                            "Anggota Petani",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                          ),
-                          subtitle: Padding(
-                            padding: EdgeInsets.only(top: 7),
-                            child: Text(
-                              "30",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              _box(5),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      height: 80,
-                      width: 50,
-                      margin: const EdgeInsets.only(left: 5.0),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 2, left: 5),
-                        child: ListTile(
-                          onTap: null,
-                          title: const Text(
-                            "Anggota Petani",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                          ),
-                          subtitle: Padding(
-                            padding: EdgeInsets.only(top: 7),
-                            child: Text(
-                              "30",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      height: 80,
-                      width: 50,
-                      margin: const EdgeInsets.only(left: 5.0),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 2, left: 5),
-                        child: ListTile(
-                          onTap: null,
-                          title: const Text(
+                          title: Text(
                             "Anggota Petani",
                             style: TextStyle(
                               color: Colors.white,
@@ -260,11 +171,11 @@ class _RingkasanState extends State<RingkasanPage> {
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 2, left: 5),
+                      child: const Padding(
+                        padding: EdgeInsets.only(top: 2, left: 5),
                         child: ListTile(
                           onTap: null,
-                          title: const Text(
+                          title: Text(
                             "Anggota Petani",
                             style: TextStyle(
                               color: Colors.white,
@@ -279,6 +190,83 @@ class _RingkasanState extends State<RingkasanPage> {
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Container(
+                      height: 80,
+                      width: 50,
+                      margin: const EdgeInsets.only(left: 5.0),
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.only(top: 2, left: 5),
+                        child: ListTile(
+                          onTap: null,
+                          title: Text(
+                            "Anggota Petani",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                          subtitle: Padding(
+                            padding: EdgeInsets.only(top: 7),
+                            child: Text(
+                              "30",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              _box(5),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: Container(
+                      height: 80,
+                      width: 50,
+                      margin: const EdgeInsets.only(left: 5.0),
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: const Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 2, left: 5),
+                          child: ListTile(
+                            onTap: null,
+                            title: Text(
+                              "Anggota Petani",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                            subtitle: Padding(
+                              padding: EdgeInsets.only(top: 7),
+                              child: Text(
+                                "30",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20),
+                              ),
                             ),
                           ),
                         ),
@@ -295,11 +283,11 @@ class _RingkasanState extends State<RingkasanPage> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 2, left: 5),
+                      child: const Padding(
+                        padding: EdgeInsets.only(top: 2, left: 5),
                         child: ListTile(
                           onTap: null,
-                          title: const Text(
+                          title: Text(
                             "",
                             style: TextStyle(
                               color: Colors.white,
@@ -348,7 +336,7 @@ class _RingkasanState extends State<RingkasanPage> {
             height: Get.height * 0.75,
             width: 500,
             child: Padding(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -465,14 +453,14 @@ class _RingkasanState extends State<RingkasanPage> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                           Expanded(
                             child: SizedBox(
                               width: 100,
                               child: TextButton(
-                                child: Text("Simpan"),
+                                child: const Text("Simpan"),
                                 onPressed: () {},
                                 style: ButtonStyle(
                                   backgroundColor:
@@ -516,13 +504,26 @@ class _RingkasanState extends State<RingkasanPage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Expanded(
-            flex: 5,
+            flex: 3,
             child: Text(
               input,
               style: const TextStyle(color: Colors.black54, fontSize: 16),
             ),
           ),
-          Text(
+          Expanded(
+            flex: 2,
+            child: InkWell(
+              onTap: () {
+                Get.to(() => const UbahPengurus());
+              },
+              child: const Icon(
+                Icons.mode_edit,
+                color: Colors.green,
+                size: 15,
+              ),
+            ),
+          ),
+          const Text(
             ":    ",
             style: TextStyle(color: Colors.black87, fontSize: 16),
           ),
@@ -530,7 +531,7 @@ class _RingkasanState extends State<RingkasanPage> {
             flex: 5,
             child: Text(
               isi,
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.black54,
                   fontSize: 16,
                   fontWeight: FontWeight.bold),

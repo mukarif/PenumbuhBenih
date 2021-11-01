@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petani/extra/bottom_nav.dart';
-import 'package:petani/model/user.dart';
 import 'package:petani/page/akun/pengaturan_akun.dart';
 import 'package:petani/page/akun/ubah_pass.dart';
 import 'package:petani/extra/logout_alert.dart';
@@ -20,6 +19,7 @@ class _AkunPageState extends State<AkunPage> implements GetUserContract {
   TextEditingController nama = TextEditingController();
   TextEditingController alamat = TextEditingController();
   TextEditingController poktan = TextEditingController();
+  String _namaUser;
   String _nama;
   String _alamat;
   String _gapoktan;
@@ -42,6 +42,9 @@ class _AkunPageState extends State<AkunPage> implements GetUserContract {
   void onPostLoginSuccess(dynamic user) {
     print("username Sukses :: " + user['username'].toString());
 
+    _namaUser = user['detail']['role']['first_name'] +
+        " " +
+        user['detail']['role']['last_name'];
     _nama = user['detail']['role']['poktan']['nama'];
     _alamat = user['detail']['role']['poktan']['alamat'];
     _gapoktan = user['detail']['role']['poktan']['gapoktan'];
@@ -81,7 +84,7 @@ class _AkunPageState extends State<AkunPage> implements GetUserContract {
                   children: [
                     headerAkun(),
                     bodyIcon(),
-                    bodyProfile(_nama, _gapoktan),
+                    bodyProfile(_namaUser, _gapoktan),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(25, 20, 25, 20),
                       child: Form(
@@ -183,7 +186,7 @@ class _AkunPageState extends State<AkunPage> implements GetUserContract {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  nama,
+                  nama ?? "Nama Tidak Ada",
                   style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -193,7 +196,7 @@ class _AkunPageState extends State<AkunPage> implements GetUserContract {
                   height: 5,
                 ),
                 Text(
-                  gapoktan,
+                  gapoktan ?? "Gapoktan Tidak Ada",
                   style: const TextStyle(color: Colors.white54, fontSize: 14),
                 ),
               ],

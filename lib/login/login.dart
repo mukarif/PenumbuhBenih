@@ -7,14 +7,9 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:petani/extra/bottom_nav.dart';
 import 'package:petani/extra/bottom_nav_petani.dart';
-import 'package:petani/helper/token.dart';
-import 'package:petani/page_petani/home/home.dart';
-import 'package:petani/page_petani/lahan/lahan.dart';
 import 'package:petani/login/daftar_baru.dart';
 import 'package:petani/login/lupa_pass.dart';
-import 'package:petani/util/api.dart';
 import 'package:petani/presenter/login_presenter.dart';
-import 'package:petani/helper/token.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -33,7 +28,6 @@ class _LoginPageState extends State<LoginPage> implements PostLoginContract {
 
   bool loading = true;
 
-  final Token _token = Token();
   PostLoginPresenter _presenter;
   _LoginPageState() {
     _presenter = PostLoginPresenter(this);
@@ -47,7 +41,6 @@ class _LoginPageState extends State<LoginPage> implements PostLoginContract {
   @override
   void onPostLoginSuccess(dynamic token) {
     print("Sukses :: " + token['profile']['role']['id'].toString());
-    _token.saveToken(token['api_key']);
     if (token['profile']['role']['id'] == 1) {
       Get.to(() => const TabBarPagePetani());
     } else {
