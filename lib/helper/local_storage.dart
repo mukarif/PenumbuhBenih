@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorage {
+  // data user
   Future<void> saveUserData(String data) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setString('user_data', data);
@@ -13,6 +14,7 @@ class LocalStorage {
     return data;
   }
 
+  // data auth
   Future<void> saveToken(String token) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setString('access_token', token);
@@ -37,5 +39,17 @@ class LocalStorage {
       return data;
     }
     return null;
+  }
+
+  // data auth
+  Future<void> saveWilayah(String token) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setString('access_token', token);
+  }
+
+  Future<dynamic> readWilayah() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    final String data = pref.getString('access_token');
+    return data;
   }
 }

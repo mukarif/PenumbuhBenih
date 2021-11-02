@@ -150,7 +150,7 @@ class _DetailAnggotaState extends State<DetailAnggota>
                         //   ),
                         // );
                       }),
-                  FutureBuilder<String>(
+                  FutureBuilder(
                       future:
                           _calculation2, // a previously-obtained Future<String> or null
                       // ignore: missing_return

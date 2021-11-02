@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petani/extra/bottom_nav.dart';
 import 'package:petani/page/pengurus/ubah_pengurus_ketua.dart';
+import 'package:petani/presenter/count/count_lahan_presenter.dart';
+import 'package:petani/presenter/count/count_poktan_presenter.dart';
 
 class RingkasanPage extends StatefulWidget {
   const RingkasanPage({Key key}) : super(key: key);
@@ -11,7 +13,8 @@ class RingkasanPage extends StatefulWidget {
   _RingkasanState createState() => _RingkasanState();
 }
 
-class _RingkasanState extends State<RingkasanPage> {
+class _RingkasanState extends State<RingkasanPage>
+    implements GetCountAnggotaContract, GetCountLahanContract {
   GlobalKey<FormState> formLahan = GlobalKey<FormState>();
   TextEditingController hslPanen = TextEditingController();
   TextEditingController hrgaJual = TextEditingController();
@@ -27,8 +30,48 @@ class _RingkasanState extends State<RingkasanPage> {
 
   bool checked = false;
 
+  int _anggotaCount;
+  int _lahanCount;
+
+  GetCountAnggotaPresenter _presenter;
+  GetCountLahanPresenter _presenterLahan;
+  _RingkasanState() {
+    _presenter = GetCountAnggotaPresenter(this);
+    _presenterLahan = GetCountLahanPresenter(this);
+  }
+
+  @override
+  void onGetCountAnggotaError(String errorTxt) {
+    print("Error :: " + errorTxt);
+  }
+
+  @override
+  void onGetCountAnggotaSuccess(int count) {
+    print("username Sukses :: " + count.toString());
+    _anggotaCount = count;
+  }
+
+  @override
+  void onGetCountLahanError(String errorTxt) {
+    print("Error :: " + errorTxt);
+  }
+
+  @override
+  void onGetCountLahanSuccess(double count) {
+    int a = count.toInt();
+    print("username Sukses :: " + a.toInt().toString());
+    _lahanCount = a;
+  }
+
+  final Future<String> _calculation = Future<String>.delayed(
+    const Duration(seconds: 2),
+    () => 'Data Loaded',
+  );
+
   @override
   Widget build(BuildContext context) {
+    _presenter.doGetCountAnggota();
+    _presenterLahan.doGetCountLahan();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -45,276 +88,317 @@ class _RingkasanState extends State<RingkasanPage> {
         ),
       ),
       body: Container(
-        color: Colors.white,
-        height: Get.height * 0.9,
-        width: Get.width,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const Text(
-                "Ringkasan",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-              ),
-              _box(40),
-              const Padding(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: Text(
-                  "Kepengurusan",
-                  style: TextStyle(
-                      color: Colors.black54,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),
-                ),
-              ),
-              _box(10),
-              _listDetail("Ketua", "Raff Fahru"),
-              _box(7),
-              _listDetail("Wakil Ketua", "Faris"),
-              _box(7),
-              _listDetail("Sekertaris 1", "Haryanto"),
-              _box(7),
-              _listDetail("Sekertaris 2", "Susetyo"),
-              _box(7),
-              _listDetail("Bendahara 1", "Sutono"),
-              _box(7),
-              _listDetail("Bendahara 2", ""),
-              _box(20),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      height: 80,
-                      width: 50,
-                      margin: const EdgeInsets.only(left: 5.0),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.only(top: 2, left: 5),
-                        child: ListTile(
-                          onTap: null,
-                          title: Text(
-                            "Anggota Petani",
+          color: Colors.white,
+          height: Get.height * 0.9,
+          width: Get.width,
+          child: FutureBuilder(
+              future:
+                  _calculation, // a previously-obtained Future<String> or null
+              // ignore: missing_return
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Ringkasan",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                        ),
+                        _box(40),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 10, right: 10),
+                          child: Text(
+                            "Kepengurusan",
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                          ),
-                          subtitle: Padding(
-                            padding: EdgeInsets.only(top: 7),
-                            child: Text(
-                              "30",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
+                                color: Colors.black54,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      height: 80,
-                      width: 50,
-                      margin: const EdgeInsets.only(left: 5.0),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.only(top: 2, left: 5),
-                        child: ListTile(
-                          onTap: null,
-                          title: Text(
-                            "Anggota Petani",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                          ),
-                          subtitle: Padding(
-                            padding: EdgeInsets.only(top: 7),
-                            child: Text(
-                              "30",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              _box(5),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      height: 80,
-                      width: 50,
-                      margin: const EdgeInsets.only(left: 5.0),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.only(top: 2, left: 5),
-                        child: ListTile(
-                          onTap: null,
-                          title: Text(
-                            "Anggota Petani",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                          ),
-                          subtitle: Padding(
-                            padding: EdgeInsets.only(top: 7),
-                            child: Text(
-                              "30",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      height: 80,
-                      width: 50,
-                      margin: const EdgeInsets.only(left: 5.0),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.only(top: 2, left: 5),
-                        child: ListTile(
-                          onTap: null,
-                          title: Text(
-                            "Anggota Petani",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                          ),
-                          subtitle: Padding(
-                            padding: EdgeInsets.only(top: 7),
-                            child: Text(
-                              "30",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              _box(5),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      height: 80,
-                      width: 50,
-                      margin: const EdgeInsets.only(left: 5.0),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: const Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 2, left: 5),
-                          child: ListTile(
-                            onTap: null,
-                            title: Text(
-                              "Anggota Petani",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
+                        _box(10),
+                        _listDetail("Ketua", "Raff Fahru"),
+                        _box(7),
+                        _listDetail("Wakil Ketua", "Faris"),
+                        _box(7),
+                        _listDetail("Sekertaris 1", "Haryanto"),
+                        _box(7),
+                        _listDetail("Sekertaris 2", "Susetyo"),
+                        _box(7),
+                        _listDetail("Bendahara 1", "Sutono"),
+                        _box(7),
+                        _listDetail("Bendahara 2", ""),
+                        _box(20),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 5,
+                              child: Container(
+                                height: 80,
+                                width: 50,
+                                margin: const EdgeInsets.only(left: 5.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 2, left: 5),
+                                  child: ListTile(
+                                    onTap: null,
+                                    title: const Text(
+                                      "Anggota Petani",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    subtitle: Padding(
+                                      padding: const EdgeInsets.only(top: 7),
+                                      child: Text(
+                                        _anggotaCount.toString() ?? "",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                            subtitle: Padding(
-                              padding: EdgeInsets.only(top: 7),
-                              child: Text(
-                                "30",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),
+                            Expanded(
+                              flex: 5,
+                              child: Container(
+                                height: 80,
+                                width: 50,
+                                margin: const EdgeInsets.only(left: 5.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 2, left: 5),
+                                  child: ListTile(
+                                    onTap: null,
+                                    title: const Text(
+                                      "Total Lahan",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    subtitle: Padding(
+                                      padding: const EdgeInsets.only(top: 7),
+                                      child: Text(
+                                        "${_lahanCount.toString()} Hektar" ??
+                                            "",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      height: 80,
-                      width: 50,
-                      margin: const EdgeInsets.only(left: 5.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.only(top: 2, left: 5),
-                        child: ListTile(
-                          onTap: null,
-                          title: Text(
-                            "",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
+                        _box(5),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 5,
+                              child: Container(
+                                height: 80,
+                                width: 50,
+                                margin: const EdgeInsets.only(left: 5.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.only(top: 2, left: 5),
+                                  child: ListTile(
+                                    onTap: null,
+                                    title: Text(
+                                      "Alsintan & Saprotan",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    subtitle: Padding(
+                                      padding: EdgeInsets.only(top: 7),
+                                      child: Text(
+                                        "30",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                          subtitle: Padding(
-                            padding: EdgeInsets.only(top: 7),
-                            child: Text(
-                              "",
-                              style: TextStyle(
+                            Expanded(
+                              flex: 5,
+                              child: Container(
+                                height: 80,
+                                width: 50,
+                                margin: const EdgeInsets.only(left: 5.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.only(top: 2, left: 5),
+                                  child: ListTile(
+                                    onTap: null,
+                                    title: Text(
+                                      "Pemeliharaan",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    subtitle: Padding(
+                                      padding: EdgeInsets.only(top: 7),
+                                      child: Text(
+                                        "30",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        _box(5),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 5,
+                              child: Container(
+                                height: 80,
+                                width: 50,
+                                margin: const EdgeInsets.only(left: 5.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 2, left: 5),
+                                    child: ListTile(
+                                      onTap: null,
+                                      title: Text(
+                                        "Hasil Panen",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      subtitle: Padding(
+                                        padding: EdgeInsets.only(top: 7),
+                                        child: Text(
+                                          "30",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 5,
+                              child: Container(
+                                height: 80,
+                                width: 50,
+                                margin: const EdgeInsets.only(left: 5.0),
+                                decoration: BoxDecoration(
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.only(top: 2, left: 5),
+                                  child: ListTile(
+                                    onTap: null,
+                                    title: Text(
+                                      "",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    subtitle: Padding(
+                                      padding: EdgeInsets.only(top: 7),
+                                      child: Text(
+                                        "",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ),
+                        _box(20),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              _box(20),
-            ],
-          ),
-        ),
-      ),
+                  );
+                } else if (snapshot.hasError) {
+                  return const Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 60,
+                  );
+                } else {
+                  return Center(
+                    child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(3.0)),
+                          color:
+                              Theme.of(context).dividerColor.withOpacity(0.10),
+                        ),
+                        padding: const EdgeInsets.only(top: 20.0),
+                        //height: 440.0,
+                        child: const SizedBox(
+                          child: CircularProgressIndicator(),
+                          height: 35.0,
+                          width: 35.0,
+                        )),
+                  );
+                }
+                // return Center(
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     crossAxisAlignment: CrossAxisAlignment.center,
+                //     children: children,
+                //   ),
+                // );
+              })),
     );
   }
 

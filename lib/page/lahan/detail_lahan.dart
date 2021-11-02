@@ -21,6 +21,7 @@ class _DetailLahanState extends State<DetailLahan> {
   // GoogleMapsController controller;
   // StreamSubscription<CameraPosition> subscription;
   // CameraPosition position;
+  int id;
 
   @override
   void initState() {
@@ -255,7 +256,7 @@ class _DetailLahanState extends State<DetailLahan> {
                                       const EdgeInsets.only(top: 7, left: 5),
                                   child: ListTile(
                                     onTap: () {
-                                      Get.to(() => const DetailBudidaya());
+                                      Get.to(() => DetailBudidaya(id));
                                     },
                                     title: const Text(
                                       "Padi",

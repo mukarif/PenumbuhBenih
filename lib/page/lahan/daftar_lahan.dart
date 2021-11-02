@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:petani/extra/bottom_nav.dart';
 import 'package:petani/page/lahan/detail_lahan.dart';
 import 'package:petani/page/lahan/lahan_baru.dart';
+import 'package:petani/presenter/lahan_presenter.dart';
 
 class DaftarLahan extends StatefulWidget {
   const DaftarLahan({Key key}) : super(key: key);
@@ -12,8 +13,26 @@ class DaftarLahan extends StatefulWidget {
   _DaftarLahanState createState() => _DaftarLahanState();
 }
 
-class _DaftarLahanState extends State<DaftarLahan> {
+class _DaftarLahanState extends State<DaftarLahan> implements GetLahanContract {
   GlobalKey<FormState> formLahan = GlobalKey<FormState>();
+
+  List _data = [];
+  GetLahanPresenter _presenter;
+  _DaftarLahanState() {
+    _presenter = GetLahanPresenter(this);
+  }
+
+  @override
+  void onGetLahanError(String errorTxt) {
+    print("Error :: " + errorTxt);
+  }
+
+  @override
+  void onGetLahanSuccess(count) {
+    print("username Sukses :: " + count.toString());
+    _data = count;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -9,6 +9,7 @@ class DetailAlsintan extends StatefulWidget {
   DetailAlsintan(this.id);
 
   @override
+  // ignore: no_logic_in_create_state
   _DetailAlsintanState createState() => _DetailAlsintanState(id);
 }
 

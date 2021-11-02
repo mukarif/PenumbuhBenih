@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petani/login/login.dart';
+import 'package:petani/presenter/provinsi_presenter.dart';
 
 class DaftarBaru extends StatefulWidget {
   const DaftarBaru({Key key}) : super(key: key);
@@ -9,7 +10,8 @@ class DaftarBaru extends StatefulWidget {
   _DaftarBaruState createState() => _DaftarBaruState();
 }
 
-class _DaftarBaruState extends State<DaftarBaru> {
+class _DaftarBaruState extends State<DaftarBaru>
+    implements GetProvinsiContract {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   TextEditingController nama = TextEditingController();
@@ -29,8 +31,25 @@ class _DaftarBaruState extends State<DaftarBaru> {
 
   List<String> _dropdownValues = ["One", "Two", "Three", "Four", "Five"];
 
+  GetProvinsiPresenter _presenter;
+  _DaftarBaruState() {
+    _presenter = GetProvinsiPresenter(this);
+  }
+
+  @override
+  void onGetProvinceError(String errorTxt) {
+    print("Error :: " + errorTxt);
+  }
+
+  @override
+  void onGetProvinceSuccess(dynamic user) {
+    print("username Sukses :: " + user.toString());
+    _dropdownValues = user;
+  }
+
   @override
   Widget build(BuildContext context) {
+    _presenter.doGetProvinsi();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Container(

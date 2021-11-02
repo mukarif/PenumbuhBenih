@@ -32,6 +32,22 @@ class RestDatasource {
     }
   }
 
+  Future<dynamic> getProvinsi() {
+    // ignore: avoid_print
+    // print("token user :: " + token);
+    return _netUtil.get(
+      Uri.parse(GET_PROVINCE),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      },
+    ).then((dynamic res) {
+      // ignore: avoid_print
+      print("Ambil Data Lokal : " + res.toString());
+      return res;
+    });
+  }
+
   Future<dynamic> getUser() async {
     String token = await _token.getAccessToken();
     // ignore: avoid_print
@@ -152,6 +168,110 @@ class RestDatasource {
     ).then((dynamic res) {
       print("data res : " + res.toString());
       return res;
+    });
+  }
+
+  Future<dynamic> getPerawatan() async {
+    String token = await _token.getAccessToken();
+    // ignore: avoid_print
+    print("token user :: " + token);
+    return _netUtil.get(
+      Uri.parse(GET_PERAWATAN),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).then((dynamic res) {
+      // ignore: avoid_print
+      print("Ambil Data perawatan : " + res.toString());
+      return res['results'];
+    });
+  }
+
+  Future<dynamic> getBudidaya() async {
+    String token = await _token.getAccessToken();
+    // ignore: avoid_print
+    print("token user :: " + token);
+    return _netUtil.get(
+      Uri.parse(GET_BUDIDAYA),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).then((dynamic res) {
+      // ignore: avoid_print
+      print("Ambil Data perawatan : " + res.toString());
+      return res['results'];
+    });
+  }
+
+  Future<dynamic> getDetailBudidaya(int id) async {
+    String token = await _token.getAccessToken();
+    // ignore: avoid_print
+    print("token user :: " + token);
+    return _netUtil.get(
+      Uri.parse(GET_BUDIDAYA + id.toString()),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).then((dynamic res) {
+      print("data res : " + res.toString());
+      return res;
+    });
+  }
+
+  Future<int> getCountAnggota() async {
+    String token = await _token.getAccessToken();
+    // ignore: avoid_print
+    print("token user :: " + token);
+    return _netUtil.get(
+      Uri.parse(GET_ANGGOTA + "total"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).then((dynamic res) {
+      print("data res : " + res['result'].toString());
+      return res['result'];
+    });
+  }
+
+  Future<double> getCountLahan() async {
+    String token = await _token.getAccessToken();
+    // ignore: avoid_print
+    print("token user :: " + token);
+    return _netUtil.get(
+      Uri.parse(GET_LAHAN + "luas_lahan_poktan"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).then((dynamic res) {
+      print("data res : " + res['result'].toString());
+      return res['result'];
+    });
+  }
+
+  Future<dynamic> getLahan() async {
+    String token = await _token.getAccessToken();
+    // ignore: avoid_print
+    print("token user :: " + token);
+    return _netUtil.get(
+      Uri.parse(GET_LAHAN),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).then((dynamic res) {
+      print("data res : " + res.toString());
+      return res['result'];
     });
   }
 
